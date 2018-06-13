@@ -1,0 +1,1 @@
+void subLinear(infos *p){

@@ -1,13 +1,37 @@
 
 #include <stdio.h> 
 #include <windows.h> 
+#include <string.h>
 
-int main ( void )
-{
+
+void trocaCor(char *p);
+
+
+
+int main ( void ){
+HANDLE h = GetStdHandle ( STD_OUTPUT_HANDLE );
+  WORD wOldColorAttrs;
+  
+  char a[1000]="oi ";
+  trocaCor(&a);
+  printf("%s\n", a);
+  SetConsoleTextAttribute ( h, wOldColorAttrs);
+  printf("Hahah");
+
+  return 0;
+
+}
+
+
+
+
+void trocaCor(char *p){
+
   HANDLE h = GetStdHandle ( STD_OUTPUT_HANDLE );
   WORD wOldColorAttrs;
   CONSOLE_SCREEN_BUFFER_INFO csbiInfo; 
   
+
   /*
    * First save the current color information
    */
@@ -19,19 +43,18 @@ int main ( void )
    */
   SetConsoleTextAttribute ( h, FOREGROUND_GREEN | FOREGROUND_INTENSITY );
   
-  printf ( "teste1" );
+  strcat(p, "tudo ");
 
   SetConsoleTextAttribute ( h, FOREGROUND_BLUE | FOREGROUND_INTENSITY );
 
-  printf ( "teste2" );
+  strcat(p, "muito ");
 
 
   SetConsoleTextAttribute ( h, FOREGROUND_RED | FOREGROUND_INTENSITY);
-  printf ( "teste3" );
+  strcat(p, "bem?");
 
   /*
    * Restore the original colors
    */
-  SetConsoleTextAttribute ( h, wOldColorAttrs);
-  return 0;
+  return;
 }

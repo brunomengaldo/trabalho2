@@ -24,9 +24,10 @@ typedef struct{
     int nLinhas;
     int nPalavras;
     char matriz[MAX][MAX];
+    char *point[MAX][MAX];
     char transposta[MAX][MAX];
     char lista[MAX][MAX];
-    char randW[MAX][MAX];
+    // char randW[MAX][MAX];
     char vetor[MAX*MAX*10];
     char faltam[MAX][MAX];
 } infos;
@@ -42,6 +43,7 @@ void subPalavras(infos *);
 void subMecanismo(infos *);
 void subManual(infos *);
 void subLinear(infos *);
+void subColor(infos *);
 
 
 // Programa principal
@@ -51,28 +53,29 @@ int main(int argc, char *argv[]){
     // Variável local com valor da subrotina subStart
     int x=subStart();
 
-	  // Declarações Locais
+	// Declarações Locais
     infos valores;
 
 
     // Avaliação de casos para criação do caça palavras
 
     if(x==0){       // Caso aleatório
-        subDimencoes(&valores);
-        subAleat(&valores);
-        //subPalavras(&valores);
-        subImprimir(&valores);
+        // subDimencoes(&valores);
+        // subAleat(&valores);
+        // subPalavras(&valores);
+        // subImprimir(&valores);
     }
     else if(x==1){  // Leitura de arquivos
-        subLeitura(&valores);
-        subLinear(&valores);
-        subMecanismo(&valores);
+        // subLeitura(&valores);
+        // subLinear(&valores);
+        // printf("%s\n", valores.vetor);
+        // subMecanismo(&valores);
     }
     else if(x==2){  // Inserção manual
-        subDimencoes(&valores);
-        subManual(&valores);
-        subLinear(&valores);
-        subMecanismo(&valores);
+        // subDimencoes(&valores);
+        // subManual(&valores);
+        // subLinear(&valores);
+        // subMecanismo(&valores);
     }
     else{           // Nenhuma das opções disponíveis
         printf("Opcao nao valida!\n");
@@ -150,17 +153,11 @@ void subAleat(infos *p){
         }
     }
 
-    // Criação de matriz transposta à matriz principal
-    for(i=0; i<p->nLinhas; i++){
-        for(j=0; j<p->nColunas; j++){
-            p->transposta[j][i]=p->matriz[i][j];
-        }
-    }
-
     return;
 }
 
 
+/*
 // Objetivo: Extrair palavras pertencentes à matriz principal ou à sua transposta
 // Parâmetros formais
 // - p: conjunto de dados (parâmentro de saída de dados)
@@ -194,7 +191,7 @@ void subPalavras(infos *p){
     }
 
     return;
-}
+}*/
 
 
 // Objetivo: Ler os arquivos que contém o caça palavras completo
@@ -212,11 +209,15 @@ void subLeitura(infos *p){
 
     // Armazenamento do nome dos arquivos
     fflush(stdin);
-    printf("Insira o nome do arquivo da matriz (com .txt):\n");
+    printf("Insira o nome do arquivo da matriz (sem extensao):\n");
     gets(nome[0]);
-    printf("Insira o nome do arquivo da lista de palavras (com .txt):\n");
+    printf("Insira o nome do arquivo da lista de palavras (sem extensao):\n");
     gets(nome[1]);
     fflush(stdin);
+
+    for(i=0; i<2; i++){
+        strcat(nome[i], ".txt");
+    }
 
     // Leitura arquivo da matriz
     FILE *arquivoX;
@@ -281,6 +282,24 @@ void subManual(infos *p){
 }
 
 
+
+void subAssocia(infos *p){
+
+    int i, j;
+
+    for(i=0; i<p->nLinhas; i++){
+        for(j=0; j<p->nColunas; j++){
+            p->point[i][j]=p->matriz[i][j];
+        }
+    }
+
+    return;
+}
+
+
+
+
+
 // Objetivo: Linearizar a matriz principal em um vetor tanto em linhas, como em colunas
 // Parâmetros formais
 // - p: conjunto de dados (parâmentro de saída de dados)
@@ -305,16 +324,16 @@ void subLinear(infos *p){
     }
 
     // Linearização em colunas
-    for(i=0; i<p->nColunas; i++){
-        for(j=0; j<p->nLinhas; j++){
-            p->vetor[cont0] = p->matriz[j][i];
+    for(j=0; j<p->nColunas; j++){
+        for(i=0; i<p->nLinhas; i++){
+            p->vetor[cont0] = p->matriz[i][j];
             cont0++;
         }
         p->vetor[cont0] = '\n';
         cont0++;
     }
 
-    //Oposta Linh
+    //Linearização Oposta em Linhas
     for(i=0; i<p->nLinhas; i++){
         for(j=p->nColunas-1; j>=0; j--){
             p->vetor[cont0] = p->matriz[i][j];
@@ -324,7 +343,7 @@ void subLinear(infos *p){
         cont0++;
     }
 
-    //Opost Vertical
+    //Linearização Oposta em Colunas
     for(i=0; i<p->nColunas; i++){
         for(j=p->nLinhas-1; j>=0; j--){
             p->vetor[cont0] = p->matriz[j][i];
@@ -334,7 +353,7 @@ void subLinear(infos *p){
         cont0++;
     }
 
-    //DIAGONAL direita
+    //Linearização em Diagonal direita
     for(i=0; i<p->nLinhas+p->nColunas-1; i++){        
         for(j=0; j<p->nLinhas; j++){
             for(k=p->nColunas-1; k>=0; k--){
@@ -349,7 +368,7 @@ void subLinear(infos *p){
         cont0++;
     }
     
-    //OPOSTA DIAG DIR
+    //Linearização Oposta em Diagonal direita
     temp=p->nColunas-1;
 
     for(i=0; i<p->nLinhas+p->nColunas-1; i++){
@@ -366,7 +385,7 @@ void subLinear(infos *p){
         cont0++;
     }
 
-    //DIAGONAL esquerda
+    //Linearização em Diagonal esquerda
     for(i=0; i<p->nLinhas+p->nColunas-1; i++){
         for(j=0; j<p->nLinhas; j++){
             for(k=0; k<p->nColunas; k++){
@@ -380,7 +399,7 @@ void subLinear(infos *p){
         cont0++;
     }
 
-    //OPOSTA DIAG ESQ
+    // Linearização Oposta em Diagonal esquerda
     for(i=0; i<p->nLinhas+p->nColunas-1; i++){
         for(k=0; k<p->nColunas; k++){
             for(j=0; j<p->nLinhas; j++){
@@ -439,7 +458,7 @@ void subMecanismo(infos *p){
     return;
 }
 
-
+/*
 // Objetivo: Imprimir a matriz aleatória e a lista de palavras obtidas dela
 // Parâmetros formais
 // - p: conjunto de dados (parâmentro de saída de dados)
@@ -465,4 +484,48 @@ void subImprimir(infos *p){
     }
 
     return;
-}
+}*/
+
+
+/*
+void subColor(infos *p){
+
+    int i, j;
+
+
+    // Inicializa/Cria variaveis
+    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    CONSOLE_SCREEN_BUFFER_INFO consoleInfo;
+    WORD saved_attributes;
+
+    // Salva a cor atual da tela
+    GetConsoleScreenBufferInfo(hConsole, &consoleInfo);
+    saved_attributes = consoleInfo.wAttributes;
+
+    
+    // Muda cor
+    printf("\ntestando\n\n");
+
+    for(i=0; i<p->nLinhas; i++){
+        for(j=0; j<p->nColunas; j++){
+            if(i==j){
+                p->point[i][j]='J';
+                SetConsoleTextAttribute(hConsole, FOREGROUND_BLUE);
+                printf("%c ", p->point[i][j]);
+                SetConsoleTextAttribute(hConsole, saved_attributes);
+            }
+            else{
+                printf("%c ", p->point[i][j]);
+            }
+        }
+        printf("\n");
+    }
+
+
+    // SetConsoleTextAttribute(hConsole, FOREGROUND_BLUE);
+ 
+    // Restore original attributes
+    SetConsoleTextAttribute(hConsole, saved_attributes);
+
+    return;
+}*/

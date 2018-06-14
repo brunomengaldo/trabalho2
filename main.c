@@ -282,7 +282,11 @@ void subManual(infos *p){
 }
 
 
-
+// Objetivo: Associar matriz de ponteiros com matriz real
+// Parâmetros formais
+// - p: conjunto de dados (parâmentro de saída de dados)
+// Valor de Retorno:
+// - não há (procedimento)
 void subAssocia(infos *p){
 
     int i, j;
@@ -295,8 +299,6 @@ void subAssocia(infos *p){
 
     return;
 }
-
-
 
 
 
@@ -440,6 +442,9 @@ void subMecanismo(infos *p){
             c++;
             flag=0;
         }
+        else if(strstr(p->vetor, p->lista[i]) != NULL){
+            //
+        }
     }
 
     //printf("\n\n%s\n\n", p->vetor);
@@ -488,6 +493,11 @@ void subImprimir(infos *p){
 
 
 /*
+// Objetivo: Imprimir a matriz com as palavras achadas destacadas
+// Parâmetros formais
+// - p: conjunto de dados (parâmentro de saída de dados)
+// Valor de Retorno:
+// - não há (procedimento)
 void subColor(infos *p){
 
     int i, j;
